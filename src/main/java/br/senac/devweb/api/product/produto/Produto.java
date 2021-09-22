@@ -13,59 +13,59 @@ import javax.validation.constraints.Size;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @Entity(name = "PRODUTO")
 public class Produto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    @NotNull(message = "O campo nome não pode ser nulo")
-    @Size(min = 1, max = 30, message = "O campo nome deve conter entre 1 e 30")
-    @Column(name = "NOME")
-    private String nome;
+        @NotNull(message = "O campo nome não pode ser nulo")
+        @Size(min = 1, max = 30, message = "O campo nome deve conter entre 1 e 30")
+        @Column(name = "NOME")
+        private String nome;
 
-    @NotNull(message = "O campo descricao não pode ser nulo")
-    @Size(min = 1, max = 255, message = "O campo descricao deve conter entre 1 e 255 caracteres")
-    @Column(name = "DESCRICAO")
-    private String descricao;
+        @NotNull(message = "O campo descricao não pode ser nulo")
+        @Size(min = 1, max = 255, message = "O campo descricao deve conter entre 1 e 255 caracteres")
+        @Column(name = "DESCRICAO")
+        private String descricao;
 
-    @Column(name = "COMPLEMENTO")
-    private String complemento;
+        @Column(name = "COMPLEMENTO")
+        private String complemento;
 
-    @NotNull(message = "O campo valor não pode ser nulo")
-    @NotEmpty(message = "O campo valor não pode ser vazio")
-    @Column(name = "VALOR")
-    private Double valor;
+        @NotNull(message = "O campo valor não pode ser nulo")
+        @NotEmpty(message = "O campo valor não pode ser vazio")
+        @Column(name = "VALOR")
+        private Double valor;
 
-    @NotNull(message = "O campo unidade de Medida não pode ser nulo")
-    @NotEmpty(message = "O campo unidade de Medida não pode ser vazio")
-    @Column(name = "UNIDADE_MEDIDA")
-    private UnidadeMedida unidadeMedida;
+        @NotNull(message = "O campo unidade de Medida não pode ser nulo")
+        @NotEmpty(message = "O campo unidade de Medida não pode ser vazio")
+        @Column(name = "UNIDADE_MEDIDA")
+        private UnidadeMedida unidadeMedida;
 
-    @NotNull(message = "O campo quantidade não pode ser nulo")
-    @NotEmpty(message = "O campo quantidade não pode ser vazio")
-    @Column(name = "QUANTIDADE")
-    private Double qtde;
+        @NotNull(message = "O campo quantidade não pode ser nulo")
+        @NotEmpty(message = "O campo quantidade não pode ser vazio")
+        @Column(name = "QUANTIDADE")
+        private Double qtde;
 
-    @NotNull(message = "O campo fabricante não pode ser nulo")
-    @Size(min = 1, max = 255, message = "O campo fabricante deve conter entre 1 e 255 caracteres")
-    @Column(name = "FABRICANTE")
-    private String fabricante;
+        @NotNull(message = "O campo fabricante não pode ser nulo")
+        @Size(min = 1, max = 255, message = "O campo fabricante deve conter entre 1 e 255 caracteres")
+        @Column(name = "FABRICANTE")
+        private String fabricante;
 
-    @Column(name = "FORNECEDOR")
-    private String fornecedor;
+        @Column(name = "FORNECEDOR")
+        private String fornecedor;
 
-    @NotNull(message = "O campo status não pode ser nulo")
-    @NotEmpty(message = "O campo status não pode ser vazio")
-    @Column(name = "STATUS")
-    private Status status;
+        @NotNull(message = "O campo status não pode ser nulo")
+        @NotEmpty(message = "O campo status não pode ser vazio")
+        @Column(name = "STATUS")
+        private Status status;
 
-    @NotNull(message = "A categoria é obrigatória")
-    @ManyToOne(fetch = FetchType.LAZY,targetEntity = Categoria.class)
-    @JoinColumn(name = "idCategoria")
-    private Categoria categoria;
+        @NotNull(message = "A categoria é obrigatória")
+        @ManyToOne(fetch = FetchType.LAZY,targetEntity = Categoria.class)
+        @JoinColumn(name = "idCategoria")
+        private Categoria categoria;
 
     public enum UnidadeMedida{
         UN,
