@@ -1,7 +1,6 @@
 package br.senac.devweb.api.product.produto;
 
 import br.senac.devweb.api.product.categoria.Categoria;
-import br.senac.devweb.api.product.categoria.CategoriaService;
 import br.senac.devweb.api.product.exceptions.NotFoundException;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -17,10 +16,9 @@ public class ProdutoService {
 
 
     private final ProdutoRepository produtoRepository;
-    private final CategoriaService categoriaService;
 
-    public Produto salvar(ProdutoRepresentation.CreateOrUpdateProduto createOrUpdateProduto) {
-        Categoria categoria = this.categoriaService.getCategoria(createOrUpdateProduto.getCategoria());
+    public Produto salvar(ProdutoRepresentation.CreateOrUpdateProduto createOrUpdateProduto,
+                          Categoria categoria) {
         Produto produto = Produto.builder()
                 .nome(createOrUpdateProduto.getNome())
                 .descricao(createOrUpdateProduto.getDescricao())
@@ -37,10 +35,8 @@ public class ProdutoService {
         return this.produtoRepository.save(produto);
     }
 
-    public Produto atualizar(Long id, ProdutoRepresentation.CreateOrUpdateProduto createOrUpdateProduto) {
+    public Produto atualizar(Long id, ProdutoRepresentation.CreateOrUpdateProduto createOrUpdateProduto, Categoria categoria) {
         Produto produtoAntigo = this.buscarUm(id);
-
-        Categoria categoria = this.categoriaService.getCategoria(createOrUpdateProduto.getCategoria());
 
         Produto produtoAtualizado = produtoAntigo.toBuilder()
                 .nome(createOrUpdateProduto.getNome())
@@ -71,6 +67,13 @@ public class ProdutoService {
         produto.setStatus(Produto.Status.INATIVO);
         this.produtoRepository.save(produto);
     }
+    private Produto getProduto(Long id) {
+        BooleanExpression filter  = QProduto.produto.id.eq(id)
+                .and(QProduto.produto.status.eq(Produto.Status.ATIVO));
+        return this.produtoRepository.findOne(filter).orElseThrow(() -> new NotFoundException("Produto não encontrado."));
+    }
+
+
 
 }
 
