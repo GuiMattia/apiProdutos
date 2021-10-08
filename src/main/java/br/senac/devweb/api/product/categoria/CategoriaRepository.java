@@ -2,7 +2,6 @@ package br.senac.devweb.api.product.categoria;
 
 import com.querydsl.core.types.Predicate;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 

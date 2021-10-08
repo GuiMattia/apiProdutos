@@ -5,6 +5,10 @@ import br.senac.devweb.api.product.categoria.CategoriaRepresentation;
 import br.senac.devweb.api.product.categoria.CategoriaService;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.AllArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +23,7 @@ public class ProdutoController {
 
     private ProdutoService produtoService;
     private final CategoriaService categoriaService;
+    private ProdutoRepository produtoRepository;
 
     @PostMapping("/")
     public ResponseEntity<ProdutoRepresentation.Detalhes> createProduto(
@@ -40,9 +45,18 @@ public class ProdutoController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<ProdutoRepresentation.Lista>> buscarTodos() {
+    public ResponseEntity<List<ProdutoRepresentation.Lista>> buscarTodos(
+            @RequestParam(name = "fitro", required = false, defaultValue = "") String filtro,
+            @RequestParam(name = "paginaSelecionada", defaultValue = "0") Integer paginaSelecionada,
+            @RequestParam(name = "tamanhoPagina", defaultValue = "2") Integer tamanhoPagina) {
 
-        BooleanExpression filter = QProduto.produto.status.eq(Produto.Status.ATIVO);
+        BooleanExpression filter = Strings.isEmpty(filtro) ? QProduto.produto.status.eq(Produto.Status.ATIVO) :
+                QProduto.produto.status.eq(Produto.Status.ATIVO).and(QProduto.produto.descricao.containsIgnoreCase(filtro));
+
+        Pageable pageRequest = PageRequest.of(paginaSelecionada, tamanhoPagina);
+
+        Page<Produto> produtoList = this.produtoRepository.findAll(filter, pageRequest);
+
         return ResponseEntity.ok(ProdutoRepresentation.Lista.from(this.produtoService.buscarTodos(filter)));
     }
 
