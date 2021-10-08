@@ -3,12 +3,14 @@ package br.senac.devweb.api.product.produto;
 import br.senac.devweb.api.product.categoria.Categoria;
 import br.senac.devweb.api.product.categoria.CategoriaRepresentation;
 import br.senac.devweb.api.product.categoria.CategoriaService;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +48,7 @@ public class ProdutoController {
 
     @GetMapping("/")
     public ResponseEntity<List<ProdutoRepresentation.Lista>> buscarTodos(
+            @QuerydslPredicate(root = Produto.class) Predicate filtroProduto,
             @RequestParam(name = "fitro", required = false, defaultValue = "") String filtro,
             @RequestParam(name = "paginaSelecionada", defaultValue = "0") Integer paginaSelecionada,
             @RequestParam(name = "tamanhoPagina", defaultValue = "2") Integer tamanhoPagina) {
