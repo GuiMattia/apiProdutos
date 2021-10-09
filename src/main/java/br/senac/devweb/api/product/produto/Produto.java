@@ -55,7 +55,7 @@ public class Produto {
         private String fornecedor;
 
         @NotNull(message = "O campo status não pode ser nulo")
-        @Column(name = "STATUS")
+         @Column(name = "STATUS")
         private Status status;
 
         @NotNull(message = "A categoria é obrigatória")

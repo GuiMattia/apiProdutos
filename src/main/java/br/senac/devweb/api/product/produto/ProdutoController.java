@@ -3,6 +3,7 @@ package br.senac.devweb.api.product.produto;
 import br.senac.devweb.api.product.categoria.Categoria;
 import br.senac.devweb.api.product.categoria.CategoriaRepresentation;
 import br.senac.devweb.api.product.categoria.CategoriaService;
+import br.senac.devweb.api.product.util.Paginacao;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/produto")
@@ -47,20 +49,29 @@ public class ProdutoController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<ProdutoRepresentation.Lista>> buscarTodos(
+    public ResponseEntity<Paginacao> buscarTodos(
             @QuerydslPredicate(root = Produto.class) Predicate filtroProduto,
-            @RequestParam(name = "fitro", required = false, defaultValue = "") String filtro,
+//            @RequestParam(name = "filtro", required = false, defaultValue = "") String filtro,
             @RequestParam(name = "paginaSelecionada", defaultValue = "0") Integer paginaSelecionada,
             @RequestParam(name = "tamanhoPagina", defaultValue = "2") Integer tamanhoPagina) {
 
-        BooleanExpression filter = Strings.isEmpty(filtro) ? QProduto.produto.status.eq(Produto.Status.ATIVO) :
-                QProduto.produto.status.eq(Produto.Status.ATIVO).and(QProduto.produto.descricao.containsIgnoreCase(filtro));
+        BooleanExpression filter = Objects.isNull(filtroProduto) ?
+                QProduto.produto.status.eq(Produto.Status.ATIVO) :
+                QProduto.produto.status.eq(Produto.Status.ATIVO)
+                        .and(filtroProduto);
 
         Pageable pageRequest = PageRequest.of(paginaSelecionada, tamanhoPagina);
 
         Page<Produto> produtoList = this.produtoRepository.findAll(filter, pageRequest);
 
-        return ResponseEntity.ok(ProdutoRepresentation.Lista.from(this.produtoService.buscarTodos(filter)));
+        Paginacao paginacao = Paginacao.builder()
+                .conteudo(ProdutoRepresentation.Lista.from(produtoList.getContent()))
+                .paginaSelecionada(paginaSelecionada)
+                .tamanhoPagina(tamanhoPagina)
+                .proximaPagina(produtoList.hasNext())
+                .build();
+
+        return ResponseEntity.ok(paginacao);
     }
 
     @GetMapping("/{id}")

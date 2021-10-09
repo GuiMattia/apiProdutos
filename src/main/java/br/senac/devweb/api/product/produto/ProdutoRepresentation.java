@@ -109,6 +109,7 @@ public interface ProdutoRepresentation {
             return Lista.builder()
                     .id(produto.getId())
                     .nome(produto.getNome())
+                    .descricao(produto.getDescricao())
                     .complemento(produto.getComplemento())
                     .valor(produto.getValor())
                     .unidadeMedida(produto.getUnidadeMedida())
