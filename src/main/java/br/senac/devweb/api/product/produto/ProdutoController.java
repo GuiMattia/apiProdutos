@@ -23,6 +23,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/produto")
 @AllArgsConstructor
+@CrossOrigin("*")
 public class ProdutoController {
 
     private ProdutoService produtoService;
@@ -53,7 +54,7 @@ public class ProdutoController {
             @QuerydslPredicate(root = Produto.class) Predicate filtroProduto,
 //            @RequestParam(name = "filtro", required = false, defaultValue = "") String filtro,
             @RequestParam(name = "paginaSelecionada", defaultValue = "0") Integer paginaSelecionada,
-            @RequestParam(name = "tamanhoPagina", defaultValue = "2") Integer tamanhoPagina) {
+            @RequestParam(name = "tamanhoPagina", defaultValue = "20") Integer tamanhoPagina) {
 
         BooleanExpression filter = Objects.isNull(filtroProduto) ?
                 QProduto.produto.status.eq(Produto.Status.ATIVO) :

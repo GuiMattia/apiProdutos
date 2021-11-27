@@ -11,5 +11,18 @@ import java.util.List;
 public interface CategoriaRepository extends PagingAndSortingRepository<Categoria, Long>,
         QuerydslPredicateExecutor<Categoria> {
 
+    /**
+     *
+     * @param filter
+     * @return
+     */
     List<Categoria> findAll(Predicate filter);
+
+
+    /**
+     *
+     * @return
+     */
+    List<Categoria> findAll();
 }
+

@@ -12,11 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/categoria")
 @AllArgsConstructor
+@CrossOrigin("*")
 public class CategoriaController {
 
     private CategoriaService categoriaService;
@@ -38,11 +41,11 @@ public class CategoriaController {
                 .body(CategoriaRepresentation.Detail.from(this.categoriaService.update(id, createOrUpdateCategoria)));
     }
 
-    @GetMapping("/todos")
+    @GetMapping("/")
     public ResponseEntity<Paginacao> getAll(
             @RequestParam(name = "filtro", required = false, defaultValue = "") String filtro,
             @RequestParam(name = "paginaSelecionada", defaultValue = "0") Integer paginaSelecionada,
-            @RequestParam(name = "tamanhoPagina", defaultValue = "2") Integer tamanhoPagina) {
+            @RequestParam(name = "tamanhoPagina", defaultValue = "20") Integer tamanhoPagina) {
 
         BooleanExpression filter = Strings.isEmpty(filtro) ? QCategoria.categoria.status.eq(Categoria.Status.ATIVO) :
                 QCategoria.categoria.status.eq(Categoria.Status.ATIVO)   // cria o filtro com base na pesquisa do usuario
@@ -61,6 +64,17 @@ public class CategoriaController {
                 .build();
 
         return ResponseEntity.ok(paginacao);
+
+    }
+
+    @GetMapping("/full-categoria")
+    public ResponseEntity<List<CategoriaRepresentation.Lista>> getAll() {
+
+        BooleanExpression filter = QCategoria.categoria.status.eq(Categoria.Status.ATIVO);
+
+        List<Categoria> all = this.categoriaRepository.findAll(filter);
+
+        return ResponseEntity.ok(CategoriaRepresentation.Lista.from(all));
 
     }
 
